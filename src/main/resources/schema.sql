@@ -44,6 +44,10 @@ ALTER TABLE office
 ADD CONSTRAINT office_organization_id_fk
 FOREIGN KEY (org_id) REFERENCES organization (id) ON DELETE CASCADE ON UPDATE CASCADE;
 
+CREATE INDEX `ix_office` ON office(org_id);
+
 ALTER TABLE "user"
 ADD CONSTRAINT user_office_id_fk
 FOREIGN KEY (office_id) REFERENCES organization (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE INDEX `ix_organization` ON organization(office_id);
