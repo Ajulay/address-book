@@ -19,11 +19,11 @@ import java.util.List;
 @Produces("application/json")
 public class UserController {
 
-    private final UserService userServiceService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
-        this.userServiceService = userServiceService;
+        this.userService = userService;
     }
 
 
@@ -35,75 +35,58 @@ public class UserController {
                 return "{error: Введите корректный id...}";
             }
 
-            List<OfficeView> listViews = userServiceService.getUsersByViewParam(userView);
-
+            List<UserView> listViews = userService.getUsersByViewParam(userView);
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
             for (int i = 0; i < listViews.size(); i++) {
-                JsonObjectBuilder builder = Json.createObjectBuilder();
-                builder.add("id", listViews.get(i).id);
-                builder.add("name", listViews.get(i).name);
-                builder.add("isActive", listViews.get(i).isActive);
-                 “id”:””,
-  “firstName”:””,
-  “secondName”:””,
-  “middleName”:””,
-  “position”:””
-  “phone”,””,
-  “docName”:””,
-  “docNumber”:””,
-  “docDate”:””,
-  “citizenshipName”:””,
-  “citizenshipCode”:””,
-  “isIdentified”:”true”
-
-                arrayBuilder.add(builder);
+                arrayBuilder.add(getJsonUserView(listViews.get(i)));
             }
             return new Response(arrayBuilder.build()).toString();
 
         } catch (Exception e) {
 
-            return "{error: Change parameters. Parameter 'name' is required always...}";
+          //  return "{error: Change parameters. Parameter 'name' is required always...}";
+            return e.getMessage();
 
         }
     }
 
     @GetMapping("/list")
-    public String getOfficeById(@RequestParam long id) {
+    public String getUserById(@RequestParam long id) {
+        if (id <= 0){
+            return "{error: Введите корректный 'id'}";
+        }
 
         try{
-            if (id <= 0){
-                throw new Exception();
-            }
-            OfficeView officeView = userServiceService.getOfficeByById(id);
-            if(officeView == null){
-                return new Response<>("офиса с id: " + id + " не существует").sendResult();
-            }
-            JsonObjectBuilder builder = Json.createObjectBuilder();
-            builder.add("id", officeView.id);
-            builder.add("name", officeView.name.trim());
-            builder.add("address", officeView.address.trim());
-            builder.add("phone", officeView.phone);
-            builder.add("isActive", officeView.isActive);
 
-            return  new Response<>(builder.build()).sendResult();
+
+            UserView userView = userService.findById(id);
+
+
+            if(userView == null){
+                return new Response<>("сотрудника с id: " + id + " не существует").sendResult();
+            }
+            JsonObjectBuilder builder = getJsonUserView(userView);
+            return new Response<>(builder.build()).sendResult();
         } catch (Exception e) {
 
-            return "{error: Введите корректный 'id'}";
+            return "{error:  Ошибка при получениии данных}";
         }
     }
 
     @PostMapping("/save")
-    public String saveNewOffice(@RequestBody OfficeView officeView){
-        if(officeView.name == null || officeView.name.equals("")||
-                officeView.address == null || officeView.address.equals("")||
-                officeView.orgId <= 0) { //инициатива: на мой взгляд нельзя передавать на сохранение пустые параметры
-            return "{error: Введите реквизит: name}";
+    public String saveNewUser(@RequestBody UserView userView){
+
+        if(userView.firstName == null || userView.firstName.equals("")||
+                userView.officeId <= 0 ||
+                userView.position == null || userView.firstName.equals("")
+                ) {
+            return "{error: Введите обязательные реквизиты...}";
         }
 
         try {
 
-            String data = userServiceService.saveNewOffice(officeView);
+            String data = userService.saveNewUser(userView);
             return new Response<>(data).toString();
 
         } catch (Exception e) {
@@ -112,21 +95,18 @@ public class UserController {
         }
     }
 
-    // “id”:””, //обязательный параметр
-    //  “name”:””, //обязательный параметр
-    //  “address”:””, //обязательный параметр
     @PostMapping("/update")
-    public String officeUpdate(@RequestBody OfficeView officeView) {
-        if(officeView.id <= 0 ||
-                officeView.name == null || officeView.name.equals("") ||
-                officeView.address == null || officeView.address.equals("")) {
+    public String userUpdate(@RequestBody UserView userView) {
+        if(userView.id <= 0 ||
+                userView.firstName == null || userView.firstName.equals("") ||
+                userView.position == null || userView.position.equals("")) {
 
-            return "{error: Введите реквизит: name}";
+            return "{error: Введите обязательные реквизит: id, firstName, position}";
         }
 
 
         try {
-            String data = userServiceService.officeUpdate(officeView);
+            String data = userService.userUpdate(userView);
             return new Response<>(data).toString();
 
         } catch (Exception e) {
@@ -134,6 +114,21 @@ public class UserController {
         }
     }
 
+        private JsonObjectBuilder getJsonUserView(UserView userView){
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+            builder.add("id", userView.id);
+            builder.add("firstName", userView.firstName);
+            builder.add("secondName", userView.secondName);
+            builder.add("middleName", userView.middleName);
+            builder.add("position", userView.position);
+            builder.add("phone", userView.phone);
+            builder.add("docName", userView.docName);
+            builder.add("docNumber", userView.docNumber);
+            builder.add("docDate", userView.docDate);
+            builder.add("citizenshipName", userView.citizenshipName);
+            builder.add("citizenshipCode", userView.citizenshipCode);
+            builder.add("isIdentified", userView.isIdentified);
 
+        return builder;}
 
 }

@@ -63,9 +63,8 @@ public class OfficeService {
     }
     @Transactional
     public String officeUpdate(OfficeView officeView) {
-       // Organization organization = mapperFacade.map(organizationView, Organization.class);
+
         Office office = mapperFacade.map(officeView, Office.class);
-        //при маппинге 'id' не добавляется
         Organization organization = organizationDao.loadById(officeView.orgId);
         office.setOrganization(organization);
         office.setActive(officeView.isActive);
@@ -73,30 +72,5 @@ public class OfficeService {
 
         return "success";
     }
-
-//    @Transactional(readOnly = true)
-//    public List<OrganizationView> getOrganizationByViewParam (OrganizationView organizationView){
-//        List<Organization> organizations = dao.loadByViewParam(organizationView);
-//
-//        return mapperFacade.mapAsList(organizations, OrganizationView.class);
-//    }
-//
-//    @Transactional
-//    public String update(OrganizationView organizationView){
-//        Organization organization = mapperFacade.map(organizationView, Organization.class);
-//        //при маппинге 'id' не добавляется
-//        organization.setId(organizationView.id);
-//        dao.update(organization);
-//
-//        return "success";}
-//
-//    @Transactional
-//    public String save(OrganizationView organizationView){
-//        Organization organization = mapperFacade.map(organizationView, Organization.class);
-//        //при маппинге 'id' не добавляется
-//        //organization.setId(organizationView.id);
-//        dao.save(organization);
-//
-//        return "success";}
 
 }

@@ -42,5 +42,8 @@ public interface UserDao {
         void save(User user);
 
 
-    List<User> loadByViewParam(UserView userView);
+        List<User> loadByViewParam(UserView userView);
+
+        void update(User user);
 }
+

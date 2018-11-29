@@ -7,8 +7,8 @@ import javax.persistence.*;
 @Entity
 public class Doc {
 
-    @GeneratedValue
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
 
     @Column(nullable = false)

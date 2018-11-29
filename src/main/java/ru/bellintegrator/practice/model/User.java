@@ -14,8 +14,8 @@ public class User {
     private Long id;
 
     @ManyToOne
-    @JoinColumn
-    private Office officeId;
+    @JoinColumn(name = "office_id")
+    private Office office;
 
     @Column(name="first_name", nullable = false)
     private String firstName; //обязательный параметр
@@ -46,12 +46,12 @@ public class User {
         this.id = id;
     }
 
-    public Office getOfficeId() {
-        return officeId;
+    public Office getOffice() {
+        return office;
     }
 
-    public void setOfficeId(Office officeId) {
-        this.officeId = officeId;
+    public void setOffice(Office office) {
+        this.office = office;
     }
 
     public String getFirstName() {

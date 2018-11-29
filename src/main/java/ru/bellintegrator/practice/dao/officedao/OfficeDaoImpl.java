@@ -56,9 +56,8 @@ public class OfficeDaoImpl implements OfficeDao {
     public List<Office> loadByViewParam(OfficeView officeView) {
         CriteriaQuery<Office> criteria = buildCriteria(officeView);
         TypedQuery<Office> query  = em.createQuery(criteria);
-        List<Office> lists = query.getResultList();
 
-        return lists;
+        return query.getResultList();
     }
     
     private CriteriaQuery<Office> buildCriteria(OfficeView officeView) {
