@@ -12,15 +12,18 @@ import ru.bellintegrator.practice.view.OfficeView;
 import ru.bellintegrator.practice.view.OrganizationView;
 
 import java.util.List;
+
 @Service
 public class OfficeService {
     private final OfficeDao dao;
     private final MapperFacade mapperFacade;
+    private final OrganizationDao organizationDao;
 
     @Autowired
-    public OfficeService(OfficeDao dao, MapperFacade mapperFacade) {
+    public OfficeService(OfficeDao dao, MapperFacade mapperFacade, OrganizationDao organizationDao) {
         this.dao = dao;
         this.mapperFacade = mapperFacade;
+        this.organizationDao = organizationDao;
     }
 
 
@@ -34,6 +37,41 @@ public class OfficeService {
         List<Office> offices = dao.loadByViewParam(officeView);
 
         return mapperFacade.mapAsList(offices, OfficeView.class);
+    }
+    @Transactional(readOnly = true)
+    public OfficeView getOfficeByById(long id) {
+        OfficeView officeView = new OfficeView();
+        officeView.id = id;
+        List<Office> offices = dao.loadByViewParam(officeView);
+        officeView = mapperFacade.map(offices.get(0), OfficeView.class);
+        return officeView;
+
+    }
+    @Transactional
+    public String saveNewOffice(OfficeView officeView) {
+        Office office = new Office();
+        Organization organization = organizationDao.loadById(officeView.orgId);
+        office.setOrganization(organization);
+        office.setName(officeView.name);
+        office.setAddress(officeView.address);
+        office.setPhone(officeView.phone);
+        office.setActive(officeView.isActive);
+
+        dao.save(office);
+
+        return "success";
+    }
+    @Transactional
+    public String officeUpdate(OfficeView officeView) {
+       // Organization organization = mapperFacade.map(organizationView, Organization.class);
+        Office office = mapperFacade.map(officeView, Office.class);
+        //при маппинге 'id' не добавляется
+        Organization organization = organizationDao.loadById(officeView.orgId);
+        office.setOrganization(organization);
+        office.setActive(officeView.isActive);
+        dao.update(office);
+
+        return "success";
     }
 
 //    @Transactional(readOnly = true)

@@ -21,7 +21,7 @@ public interface OfficeDao {
      * @return
      */
     Office loadById(Long id);
-
+//
     /**
      * Получить Office по названию
      *
@@ -31,11 +31,20 @@ public interface OfficeDao {
     Office loadByName(String name);
 
     /**
-     * Сохранить User
+     * Сохранить Office
      *
      * @param office
      */
     void save(Office office);
 
+
+    /**
+     * Получить список Office'ов по переданным параметрам
+     *
+     * @param officeView
+     * @return
+     */
     List<Office> loadByViewParam(OfficeView officeView);
+
+    void update(Office office);
 }

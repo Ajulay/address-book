@@ -48,19 +48,16 @@ public class OrganizationController {
                 JsonObjectBuilder builder = Json.createObjectBuilder();
                 builder.add("id", listViews.get(i).id);
                 builder.add("name", listViews.get(i).name.trim());
-                builder.add("isActive", listViews.get(i).active);
+                builder.add("isActive", listViews.get(i).isActive + "");
                 arrayBuilder.add(builder);
             }
 
             return new Response(arrayBuilder.build()).toString();
 
         } catch (Exception e) {
-
             return "{error: Change parameters. Parameter 'name' is required always...}";
         }
 
-
-        // return organizationService.getOrganizationByViewParam(organizationView).toString();
     }
 
 
@@ -91,7 +88,7 @@ public class OrganizationController {
     }
 
     @PostMapping("/update")
-    public String getOrganizationById(@RequestBody OrganizationView organizationView) {
+    public String organizationUpdate(@RequestBody OrganizationView organizationView) {
 
         try {
 
@@ -105,13 +102,22 @@ public class OrganizationController {
 
     @PostMapping("/save")
     public String saveNewOrganization(@RequestBody OrganizationView organizationView){
+        if(organizationView.name == null || organizationView.name.equals("") ||
+           organizationView.fullName == null || organizationView.fullName.equals("") ||
+           organizationView.inn == null || organizationView.inn.equals("") ||
+           organizationView.kpp == null || organizationView.kpp.equals("") ||
+           organizationView.address == null || organizationView.inn.equals("")){
+            return "{error: Введите обязательные реквизиты: name, fullName, inn, kpp, address}";
+        }
+
         try {
 
             String data = organizationService.save(organizationView);
             return new Response<>(data).toString();
 
         } catch (Exception e) {
-            return "{error: Введите корректный 'id'}";
+            return "{error: Введите корректные данные...}";
+
         }
     }
 

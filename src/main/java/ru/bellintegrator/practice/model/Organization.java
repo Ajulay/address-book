@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Organization {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -28,7 +28,7 @@ public class Organization {
     @Column
     private String phone;
 
-    @Column
+    @Column(name="active")
     private Boolean active;
 
     public Long getId() {
@@ -94,4 +94,6 @@ public class Organization {
     public void setActive(Boolean active) {
         this.active = active;
     }
+
+
 }

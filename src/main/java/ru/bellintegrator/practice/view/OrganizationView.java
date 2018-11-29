@@ -27,7 +27,7 @@ public class OrganizationView {
 
     public String phone;
 
-    public Boolean active;
+    public Boolean isActive;
 
 
 
@@ -35,13 +35,13 @@ public class OrganizationView {
     public String toString() {
         return "{" +
                 "\"id\": \"" + id +
-                "\"; \"name\": \"" + name.trim()+
+                "\"; \"name\": \"" + name.trim() +
                 "\"; \"fullName\": \"" + fullName.trim() +
                 "\"; \"inn\": \"" + inn.trim() +
                 "\"; \"kpp\": \"" + kpp.trim() +
                 "\"; \"address\": \"" + address.trim() +
                 "\"; \"phone: \"" + (phone == null ? "" : phone.trim()) +
-                "\"; \"isActive: \"" + active +
+                "\"; \"isActive: \"" + isActive +
                 "\"}";
     }
 

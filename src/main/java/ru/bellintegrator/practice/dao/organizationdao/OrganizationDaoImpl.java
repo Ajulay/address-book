@@ -50,13 +50,14 @@ public class OrganizationDaoImpl implements OrganizationDao {
 
     @Override
     public void save(Organization organization) {
-
-        Query query = em.createNativeQuery("INSERT INTO organization(" +
-                "name, fullname, inn, kpp, address, phone, active)" +
-                "VALUES ('" + organization.getName() + "', '" + organization.getFullName() + "', '" +
-                        organization.getInn() + "', '" + organization.getKpp()  + "','"  +
-                organization.getAddress() +"', '" + organization.getPhone() +"', true)");
-            query.executeUpdate();
+     em.persist(organization);
+   //  em.persist(organization);
+//        Query query = em.createNativeQuery("INSERT INTO organization(" +
+//                "name, fullname, inn, kpp, address, phone, active)" +
+//                "VALUES ('" + organization.getName() + "', '" + organization.getFullName() + "', '" +
+//                        organization.getInn() + "', '" + organization.getKpp()  + "','"  +
+//                organization.getAddress() +"', '" + organization.getPhone() +"', true)");
+//            query.executeUpdate();
 
     }
 
@@ -85,7 +86,7 @@ public class OrganizationDaoImpl implements OrganizationDao {
             predicates.add(builder.equal(organization.get("name"), organizationView.name));
         }
         if(organizationView.fullName != null && !organizationView.fullName.equals("")){
-            predicates.add(builder.equal(organization.get("fullname"), organizationView.fullName));
+            predicates.add(builder.equal(organization.get("fullName"), organizationView.fullName));
         }
         if(organizationView.inn != null && !organizationView.inn.equals("")){
             predicates.add(builder.equal(organization.get("inn"), organizationView.inn));
@@ -99,8 +100,8 @@ public class OrganizationDaoImpl implements OrganizationDao {
         if(organizationView.phone != null && !organizationView.phone.equals("")){
             predicates.add(builder.equal(organization.get("phone"), organizationView.phone));
         }
-        if(organizationView.active != null){
-            predicates.add(builder.equal(organization.get("active"), organizationView.active));
+        if(organizationView.isActive != null){
+            predicates.add(builder.equal(organization.get("active"), organizationView.isActive));
         }
 
         criteria.where(predicates.toArray(new Predicate[]{}));

@@ -7,12 +7,12 @@ import javax.persistence.*;
 public class Office {
 
    @Id
-   @GeneratedValue
-   private long id;
+   @GeneratedValue(strategy=GenerationType.IDENTITY)
+   private Long id;
 
    @ManyToOne
-   @JoinColumn(name = "org_id", nullable = false)
-   private Organization orgId;
+   @JoinColumn(name = "organization_id")
+   private Organization organization;
 
    @Column(nullable = false)
    private String name;
@@ -24,7 +24,7 @@ public class Office {
    private String phone;
 
    @Column(name="active")
-   private Boolean isActive;
+   private Boolean active;
 
    public long getId() {
       return id;
@@ -34,12 +34,12 @@ public class Office {
       this.id = id;
    }
 
-   public Organization getOrgId() {
-      return orgId;
+   public Organization getOrganization() {
+      return organization;
    }
 
-   public void setOrgId(Organization orgId) {
-      this.orgId = orgId;
+   public void setOrganization(Organization organization) {
+      this.organization = organization;
    }
 
    public String getName() {
@@ -67,10 +67,10 @@ public class Office {
    }
 
    public Boolean isActive() {
-      return isActive;
+      return active;
    }
 
    public void setActive(Boolean active) {
-      isActive = active;
+      this.active = active;
    }
 }

@@ -1,6 +1,9 @@
 package ru.bellintegrator.practice.dao.userdao;
 
+import ru.bellintegrator.practice.model.Office;
 import ru.bellintegrator.practice.model.User;
+import ru.bellintegrator.practice.view.UserView;
+
 import java.util.List;
 /**
  * DAO для работы с User
@@ -39,4 +42,5 @@ public interface UserDao {
         void save(User user);
 
 
+    List<User> loadByViewParam(UserView userView);
 }

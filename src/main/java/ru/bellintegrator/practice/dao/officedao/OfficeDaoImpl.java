@@ -9,6 +9,7 @@ import ru.bellintegrator.practice.view.OrganizationView;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -33,25 +34,29 @@ public class OfficeDaoImpl implements OfficeDao {
 
     @Override
     public Office loadById(Long id) {
-        return null;
-    }
+        OfficeView officeView = new OfficeView();
+        officeView.id = id;
 
+        return loadByViewParam(officeView).get(0);
+    }
+//
     @Override
     public Office loadByName(String name) {
-        return null;
+        OfficeView officeView = new OfficeView();
+        officeView.name = name;
+        return loadByViewParam(officeView).get(0);
     }
 
     @Override
     public void save(Office office) {
-
+        em.persist(office);
     }
 
     @Override
     public List<Office> loadByViewParam(OfficeView officeView) {
         CriteriaQuery<Office> criteria = buildCriteria(officeView);
-        TypedQuery<Office> query = em.createQuery(criteria);
+        TypedQuery<Office> query  = em.createQuery(criteria);
         List<Office> lists = query.getResultList();
-
 
         return lists;
     }
@@ -59,9 +64,7 @@ public class OfficeDaoImpl implements OfficeDao {
     private CriteriaQuery<Office> buildCriteria(OfficeView officeView) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<Office> criteria = builder.createQuery(Office.class);
-
         Root<Office> office = criteria.from(Office.class);
-
         List<Predicate> predicates = new ArrayList<Predicate>();
         //Проверка на наличие значения в представлении
 
@@ -72,7 +75,7 @@ public class OfficeDaoImpl implements OfficeDao {
             predicates.add(builder.equal(office.get("name"), officeView.name));
         }
         if(officeView.orgId > 0){
-            predicates.add(builder.equal(office.get("org_id"), officeView));
+            predicates.add(builder.equal(office.get("organization"), officeView.orgId));
         }
 
         if(officeView.address != null && !officeView.address.equals("")){
@@ -81,12 +84,26 @@ public class OfficeDaoImpl implements OfficeDao {
         if(officeView.phone != null && !officeView.phone.equals("")){
             predicates.add(builder.equal(office.get("phone"), officeView.phone));
         }
-        if(officeView.active != null){
-            predicates.add(builder.equal(office.get("active"), officeView.active));
+        if(officeView.isActive != null){
+            predicates.add(builder.equal(office.get("active"), officeView.isActive));
         }
 
         criteria.where(predicates.toArray(new Predicate[]{}));
 
         return criteria;
     }
+
+    public void update(Office office) {
+        Office oldOffice = loadById(office.getId());
+        oldOffice.setName(office.getName());
+        oldOffice.setAddress(office.getAddress());
+        if(office.getPhone()!=null && !office.getPhone().equals("")){
+            oldOffice.setPhone(office.getPhone());
+        }
+        if(office.isActive()!=null) {
+            oldOffice.setActive(office.isActive());
+        }
+
+    }
+
 }

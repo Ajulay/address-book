@@ -23,17 +23,17 @@ public class OfficeView {
     public String phone;
 
 
-    public Boolean active;
+    public Boolean isActive;
 
     @Override
     public String toString() {
         return "{" +
                 "\"id\":\"" + id +
                 "\", \"orgId\": \"" + orgId +
-                "\", \"name\": \"" + name +
-                "\", \"address\": \"" + address +
+                "\", \"name\": \"" + name.trim() +
+                "\", \"address\": \"" + address.trim() +
                 "\", \"phone\": \"" + phone +
-                "\", \"isActive\": \"" + active +
+                "\", \"isActive\": \"" + isActive +
                 "\"}";
     }
 }
